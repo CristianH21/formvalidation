@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Form Validation</title>
+    <link rel="stylesheet" href="/css/components.css">
+  </head>
+  <body>
+    <form id="form">
+      <div class="">
+        <label for="">Nombre</label>
+        <input type="text" name="name" class="require">
+      </div>
+      <div class="">
+        <label for="">Correo</label>
+        <input type="text" name="email" class="require">
+      </div>
+      <div class="">
+        <label for="">Ciudad</label>
+        <select name="state" class="require">
+          <option value="">Escoje uno</option>
+          <option value="AGS">Aguascalientes</option>
+          <option value="MEX">México</option>
+          <option value="VER">Veracruz</option>
+        </select>
+      </div>
+      <div class="">
+        <button type="submit" name="submit">Enviar</button>
+      </div>
+    </form>
+    <script type="text/javascript" src="/js/validation.js"></script>
+  </body>
+</html>
