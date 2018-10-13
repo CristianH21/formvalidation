@@ -1,58 +1,64 @@
 //obtienes la referencia de tu formualrio con id=form
-let form = document.querySelector('#form');
-let requiredFields = document.querySelectorAll(".require");
-  let email = document.querySelector("input[name='email']");
+let form = document.querySelector("#form");
+let name = document.querySelector("input[name='name']");
+let email = document.querySelector("input[name='email']");
+let state = document.querySelector("select[name='state']");
 //le agregar un escuchador a tu formualrio
 form.addEventListener("submit", submitForm);
 
 //el metodo que le diste cuando le hagas submit al formualrio
 function submitForm(event){
   event.preventDefault();
-  console.log(validateEmpty());
-  console.log(validateEmail());
-  if(validateEmpty() && validateEmail()){
+  console.log(validate());
+  if(validate()){
     sendData();
+  }else{
+    console.log("error");
   }
 }
 
-function validateEmpty(){
-  //vamos a validar todos los campos que sean requeridos
-  // aqui vamos a jugar con nodos (es casi lo mismo que un array)
-  // tomamos todos los campos que tengan una clase de 'require'
-  //iremos una por una, validando que no esten vacia
-  requiredFields.forEach(function(field){
-    //si el campo esta vacio
-    if(field.value == ""){
-      //el campo esta vacio
-      //le vamos a agregar una etiqueta que este campo es requerido
-      //para no hacer un chorizo aqui, vamos a crear un metodo afuera.
-      errorMessage(field, 'empty');
-    }else{
-      //si no estan vacios vamos a borrar
-      emptyMessage(field);
-    }
-  });
-}
+function validate(){
 
+  if(name.value == ""){
+    errorMessage(name, 'empty');
+    name.focus();
+    return false;
+  }else{
+    emptyMessage(name);
+  }
 
+  if(email.value == ""){
+    errorMessage(email, 'empty');
+    email.focus();
+    return false;
+  }else{
+    emptyMessage(email);
+  }
 
-//metodo para validar si el correo es valido
-function validateEmail() {
   let re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
   if(!re.test(email.value)){
     //si no hace match le ponemos el error
     errorMessage(email, 'validate');
+    email.focus();
     return false;
   }else{
     //si hace match el quetamos el error
     emptyMessage(email);
   }
+
+  if(state.value == ""){
+    errorMessage(state, 'empty');
+    state.focus();
+    return false;
+  }else{
+    emptyMessage(state);
+  }
+
+  ////////////////////////////////////////////////////
+  //  AQUI LE PUEDES AGREGAR MAS VALIDATIONS
+  ////////////////////////////////////////////////////
   return true;
 }
-
-////////////////////////////////////////////////////
-//  AQUI LE PUEDES AGREGAR MAS VALIDATIONS
-////////////////////////////////////////////////////
 
 function errorMessage(field, type){
   //hacemos refrencia al padre del input
@@ -97,7 +103,6 @@ function emptyMessage(field){
     div.removeChild(p);
   }
 }
-
 
 function sendData(){
   alert("Data sending...");
