@@ -1,17 +1,24 @@
 //obtienes la referencia de tu formualrio con id=form
 let form = document.querySelector('#form');
-
+let requiredFields = document.querySelectorAll(".require");
+  let email = document.querySelector("input[name='email']");
 //le agregar un escuchador a tu formualrio
 form.addEventListener("submit", submitForm);
 
 //el metodo que le diste cuando le hagas submit al formualrio
 function submitForm(event){
   event.preventDefault();
+  console.log(validateEmpty());
+  console.log(validateEmail());
+  if(validateEmpty() && validateEmail()){
+    sendData();
+  }
+}
+
+function validateEmpty(){
   //vamos a validar todos los campos que sean requeridos
   // aqui vamos a jugar con nodos (es casi lo mismo que un array)
   // tomamos todos los campos que tengan una clase de 'require'
-  let requiredFields = this.querySelectorAll(".require");
-
   //iremos una por una, validando que no esten vacia
   requiredFields.forEach(function(field){
     //si el campo esta vacio
@@ -24,18 +31,28 @@ function submitForm(event){
       //si no estan vacios vamos a borrar
       emptyMessage(field);
     }
-
-
-    let email = this.querySelector("input[name='email']");
-    //vamos a checar que el campo de correo este correcto
-    if(email){
-      errorMessage(field, 'validate');
-    }else{
-      emptyMessage(field);
-    }
-
   });
 }
+
+
+
+//metodo para validar si el correo es valido
+function validateEmail() {
+  let re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+  if(!re.test(email.value)){
+    //si no hace match le ponemos el error
+    errorMessage(email, 'validate');
+    return false;
+  }else{
+    //si hace match el quetamos el error
+    emptyMessage(email);
+  }
+  return true;
+}
+
+////////////////////////////////////////////////////
+//  AQUI LE PUEDES AGREGAR MAS VALIDATIONS
+////////////////////////////////////////////////////
 
 function errorMessage(field, type){
   //hacemos refrencia al padre del input
@@ -54,6 +71,8 @@ function errorMessage(field, type){
   }
 }
 
+//el damos los mensajes de error depende que que atributo tenga y que tipo de validación else {
+// aqui solo existen 2(vacio, validatar), puedes agregar mas
 function setErrorMessage(name, type){
   if(type == 'empty'){
     switch(name){
@@ -63,7 +82,7 @@ function setErrorMessage(name, type){
     }
   }else if(type == 'validate'){
     switch(name){
-      case 'email': return 'Correo incorrecto';break;
+      case 'email': return 'Correo invalido';break;
     }
   }
 }
@@ -77,4 +96,9 @@ function emptyMessage(field){
     let p = div.querySelector('p');
     div.removeChild(p);
   }
+}
+
+
+function sendData(){
+  alert("Data sending...");
 }
