@@ -1,63 +1,81 @@
 //obtienes la referencia de tu formualrio con id=form
 let form = document.querySelector("#form");
-let name = document.querySelector("input[name='name']");
-let email = document.querySelector("input[name='email']");
-let state = document.querySelector("select[name='state']");
+let inputs = form.elements;
+let errors=[];
 //le agregar un escuchador a tu formualrio
 form.addEventListener("submit", submitForm);
 
 //el metodo que le diste cuando le hagas submit al formualrio
 function submitForm(event){
   event.preventDefault();
-  console.log(validate());
   if(validate()){
     sendData();
-  }else{
-    console.log("error");
   }
 }
 
 function validate(){
+  //limpamos el arreglo cada vez que se de clic el formulario
+  errors=[];
 
-  if(name.value == ""){
-    errorMessage(name, 'empty');
-    name.focus();
-    return false;
-  }else{
-    emptyMessage(name);
+  Array.from(inputs).forEach(function(input){
+    //vamos a checar si pasa las validationes
+    checkInput(input);
+  });
+
+  //checamos si el arreglo de errores es igual a cero, no hay errores y pasa
+  if(errors.length == 0){
+    return true;
+  }
+}
+
+function checkInput(field){
+  //todas las validations para Nombre
+  if(field.getAttribute("name") == "name"){
+    if(field.value == ""){
+      errorMessage(field, 'empty');
+      field.focus();
+      errors.push("error");
+    }else {
+      emptyMessage(field);
+    }
+  }
+  //todas las validations para email
+  if(field.getAttribute("name") == "email"){
+    if(field.value == ""){
+      errorMessage(field, 'empty');
+      field.focus();
+      errors.push("error");
+    }else {
+      emptyMessage(field);
+    }
+
+    let re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+    if(!re.test(field.value)){
+      //si no hace match le ponemos el error
+      errorMessage(field, 'validate');
+      field.focus();
+      errors.push("error");
+    }else{
+      //si hace match el quetamos el error
+      emptyMessage(field);
+    }
   }
 
-  if(email.value == ""){
-    errorMessage(email, 'empty');
-    email.focus();
-    return false;
-  }else{
-    emptyMessage(email);
-  }
-
-  let re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
-  if(!re.test(email.value)){
-    //si no hace match le ponemos el error
-    errorMessage(email, 'validate');
-    email.focus();
-    return false;
-  }else{
-    //si hace match el quetamos el error
-    emptyMessage(email);
-  }
-
-  if(state.value == ""){
-    errorMessage(state, 'empty');
-    state.focus();
-    return false;
-  }else{
-    emptyMessage(state);
+  //todos los validations para state
+  if(field.getAttribute("name") == "state"){
+    if(field.value == ""){
+      errorMessage(field, 'empty');
+      field.focus();
+      errors.push("error");
+    }else {
+      emptyMessage(field);
+    }
   }
 
   ////////////////////////////////////////////////////
   //  AQUI LE PUEDES AGREGAR MAS VALIDATIONS
   ////////////////////////////////////////////////////
-  return true;
+
 }
 
 function errorMessage(field, type){
@@ -104,6 +122,7 @@ function emptyMessage(field){
   }
 }
 
+//Aqui podrias usar un script AJAX para mandar los datos a back-end
 function sendData(){
   alert("Data sending...");
 }
